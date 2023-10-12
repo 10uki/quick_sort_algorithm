@@ -1,0 +1,74 @@
+package quick_sort_algorithm;
+
+import java.util.Arrays;
+import java.util.Random;
+
+public class IntegerQuickSort {
+
+	private static int random(int lowerBound, int upperBound) {
+        Random r = new Random(); //Create instance of random class.
+        return r.nextInt(upperBound - lowerBound + 1) + lowerBound; //Return random integer between the bounds.
+    }
+
+	// Store element i in a temporary variable and exchange elements at positions i and j.
+    private static void exchange(int[] A, int i, int j) {
+        int temp = A[i];
+        A[i] = A[j];
+        A[j] = temp;
+    }
+   
+    public static int randomizedPartition(int[] A, int lowerBound, int upperBound) {
+    	// Randomly select int at index i between low and upper bounds.
+    	int i = random(lowerBound, upperBound);
+    	// Exchange int at index i and upperBound as the pivot element.
+        exchange(A, upperBound, i);
+        // Partition & return.
+        return partition(A, lowerBound, upperBound);
+    }
+
+    public static void randomizedQuickSort(int[] A, int lowerBound, int upperBound) {
+        if (lowerBound < upperBound) {
+        	// Randomly partition the array using the element at index q as the pivot
+            int q = randomizedPartition(A, lowerBound, upperBound);
+            // Recursively sort left subarray before the partition index.
+            randomizedQuickSort(A, lowerBound, q - 1);
+            // Recursively right left subarray before the partition index.
+            randomizedQuickSort(A, q + 1, upperBound);
+        }
+    }
+
+    private static int partition(int[] A, int lowerBound, int upperBound) {
+        int x = A[upperBound]; // Pivot element
+        int i = lowerBound - 1; // Highest index on the low side
+
+        for (int j = lowerBound; j < upperBound; j++) { // Process each element other than the pivot.
+            if (A[j] <= x) { // Check if the element belongs on the low side.
+                i++;  // Increment, index of a new slot in the low side.
+                exchange(A, i, j); // Place this element here.
+            }
+        }
+
+        exchange(A, i + 1, upperBound); // Pivot goes just to the right side of the low side.
+        return i + 1; // New index of the pivot. 
+    }
+
+	public static void main(String[] args) {
+		
+		// Random #'s for demo
+		int[] test = new int[5];
+		Random random = new Random();
+		for (int i = 0; i < test.length; i++) {
+			test[i] = random.nextInt(100);
+		}
+		
+		//Set lower and upper bounds.
+        int lowerBound = 0;
+        int upperBound = test.length - 1;
+		
+		System.out.println("Original Array: " + Arrays.toString(test));
+		
+		randomizedQuickSort(test, lowerBound, upperBound);
+		
+		System.out.println("Sorted Array: " + Arrays.toString(test));
+	}
+}
